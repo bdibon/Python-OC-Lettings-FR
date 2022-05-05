@@ -7,6 +7,8 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('oc_lettings_site', '0004_auto_20220505_1254'),
+        # Yes, the lettings data migration is in 0004.
+        ('profiles', '0002_migrate_profile_data')
     ]
 
     operations = [
