@@ -110,3 +110,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = str(os.path.join(BASE_DIR, 'staticfiles'))
+
+# Sentry SDK
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0,
+    send_default_pii=True
+)
