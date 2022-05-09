@@ -78,7 +78,11 @@ Utilisation de PowerShell, comme ci-dessus sauf :
 
 ## Déploiement
 
-### Récapitulatif
+### Disclaimer
+
+Le projet étant à un stade embryonnaire les bonnes pratiques propres au déploiement d'un projet django n'ont pas toutes été respectées (gestion des staticfiles et serveur webs par défaut, utilisation de sqlite).
+
+### Usage
 
 Le déploiement s'effectue lorsque la branche `master` du projet est modifiée, l'orchestrateur de *CircleCI* déclenche alors un pipeline comportant les étapes suivantes:
 
@@ -88,6 +92,20 @@ Le déploiement s'effectue lorsque la branche `master` du projet est modifiée, 
 
 Note: L'étape 2 dépend de la réussite de l'étape 1, de même l'étape 3 dépend de la réussite de l'étape 2.
 
-### Disclaimer
+### Mise en place
 
-Le projet étant à un stade embryonnaire les bonnes pratiques propres au déploiement d'un projet django n'ont pas toutes été respectées (gestion des staticfiles et serveur webs par défaut, utilisation de sqlite).
+Le projet a été configuré pour être déployé sur la plateforme heroku via un pipeline CircleCI, voir le fichier `.circleci/config.yml`, une journalisation des erreurs de l'application est également mise en place avec Sentry (voir `config/setting.py`), de plus chaque artefact est publié sur Docker Hub.
+
+La configuration sur heroku nécessite seulement la création d'une app.
+
+Pour utiliser le pipeline il suffit de configurer un nouveau projet dans l'interface de CircleCI avec le lien du repository souhaité. A noter qu'il sera nécessaire de configurer les variables d'environnement suivantes:
+
+* `DOCKERHUB_PASSWORD`
+* `DOCKERHUB_TOKEN`
+* `DOCKERHUB_USERNAME`
+* `HEROKU_API_KEY`
+* `HEROKU_APP_NAME`
+* `HEROKU_LOGIN`
+* `HEROKU_REGISTRY`
+
+La journalisation des erreurs nécessite un lien DSN (data source name), celui-ci n'est pas spécifié dans le fichier `config/settings.py`, le SDK de Sentry cherchera donc une variable d'environnement `SENTRY_DSN` à configurer sur heroku.
