@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  heroku: circleci/heroku@1.2.6
 workflows:
   build_master:
     jobs:
@@ -10,6 +12,12 @@ workflows:
           requires:
             - build_and_test
       - publish_artefact:
+          requires:
+            - package
+          filters:
+            branches:
+              only: master
+      - deploy:
           requires:
             - package
           filters:
@@ -71,3 +79,20 @@ jobs:
             docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
             docker push $IMAGE_NAME:latest
             docker push $IMAGE_NAME:$IMAGE_TAG
+  deploy:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker Image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Publish Docker Image to Heroku Registry
+          command: |
+            echo "$HEROKU_API_KEY" | docker login -u "$HEROKU_LOGIN" --password-stdin "$HEROKU_REGISTRY"
+            docker tag $IMAGE_NAME $HEROKU_REGISTRY/$HEROKU_APP_NAME/web
+            docker push $HEROKU_REGISTRY/$HEROKU_APP_NAME/web
+      - heroku/install
+      - heroku/release-docker-image
