@@ -75,3 +75,19 @@ Utilisation de PowerShell, comme ci-dessus sauf :
 
 - Pour activer l'environnement virtuel, `.\venv\Scripts\Activate.ps1` 
 - Remplacer `which <my-command>` par `(Get-Command <my-command>).Path`
+
+## Déploiement
+
+### Récapitulatif
+
+Le déploiement s'effectue lorsque la branche `master` du projet est modifiée, l'orchestrateur de *CircleCI* déclenche alors un pipeline comportant les étapes suivantes:
+
+1. Installation des dépendances du projet et mise en oeuvre des tests unitaires
+2. Conteneurisation de l'application
+3. Publication de l'artefact sur Docker Hub / déploiement vers heroku 
+
+Note: L'étape 2 dépend de la réussite de l'étape 1, de même l'étape 3 dépend de la réussite de l'étape 2.
+
+### Disclaimer
+
+Le projet étant à un stade embryonnaire les bonnes pratiques propres au déploiement d'un projet django n'ont pas toutes été respectées (gestion des staticfiles et serveur webs par défaut, utilisation de sqlite).
