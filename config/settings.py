@@ -1,5 +1,9 @@
 import os
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -111,10 +115,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = str(os.path.join(BASE_DIR, 'staticfiles'))
 
-# Sentry SDK
 
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
+# Sentry SDK
 
 sentry_sdk.init(
     integrations=[DjangoIntegration()],
